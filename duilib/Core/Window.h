@@ -138,7 +138,7 @@ public:
 	 */
 	virtual void Close(UINT nRet = IDOK);
 
-	/**
+	/**`	!Q	
 	 * @brief 显示或隐藏窗口
 	 * @param[in] bShow 为 true 时显示窗口，为 false 时为隐藏窗口，默认为 true
 	 * @param[in] bTakeFocus 是否获得焦点（激活窗口），默认为 true
