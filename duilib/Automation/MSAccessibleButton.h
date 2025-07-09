@@ -1,0 +1,21 @@
+#pragma once
+
+#include <Windows.h>
+#include <oleacc.h>
+#include "MSAccessible.h"
+#include "MSAccessibleLabel.h"
+
+namespace ui
+{
+	class MSAccessibleButton
+		: public MSAccessibleLabel
+	{
+	public:
+		MSAccessibleButton(Control* pControl);
+		virtual ~MSAccessibleButton();
+	public:
+
+
+	};
+
+}
