@@ -313,7 +313,7 @@ IFACEMETHODIMP UIAControlProvider::GetRuntimeId(SAFEARRAY** pRetVal)
 	//push uia id
 	indexs.emplace_back(UiaAppendRuntimeId);
 
-	*pRetVal = SafeArrayCreateVector(VT_I4, 0, indexs.size());
+	*pRetVal = SafeArrayCreateVector(VT_I4, 0, (ULONG)indexs.size());
 	if (*pRetVal != nullptr)
 	{
 		for (long n = 0; n < indexs.size(); n++)

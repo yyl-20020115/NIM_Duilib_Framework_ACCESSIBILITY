@@ -15,5 +15,7 @@ namespace ui
 		virtual ~MSAccessibleBox();
 	public:
 
+		void TryReloadChildren() override;
+
 	};
 }

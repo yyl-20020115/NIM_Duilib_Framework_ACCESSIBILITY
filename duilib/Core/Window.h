@@ -917,9 +917,9 @@ public:
      */
 	virtual UIAWindowProvider* GetUIAProvider();
 #endif
-
+#if defined(ENABLE_ACCESSIBLE)
 	virtual MSAccessible* GetAccessible();
-
+#endif
 
 private:
 	static Control* CALLBACK __FindControlFromNameHash(Control* pThis, LPVOID pData);

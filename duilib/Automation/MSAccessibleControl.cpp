@@ -10,4 +10,8 @@ namespace ui
 	MSAccessibleControl::~MSAccessibleControl()
 	{
 	}
+	void MSAccessibleControl::TryReloadChildren()
+	{
+		__super::TryReloadChildren();
+	}
 }

@@ -311,7 +311,6 @@ private:
 	void AttachXmlBubbledEvent(EventType eventType, const EventCallback& callback) { OnXmlBubbledEvent[eventType] += callback; }
 
 	EventMap OnXmlBubbledEvent;
-
 protected:
 	std::unique_ptr<Layout> m_pLayout;
 	bool m_bAutoDestroy;

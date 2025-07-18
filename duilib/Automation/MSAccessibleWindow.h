@@ -4,9 +4,9 @@
 #include <oleacc.h>
 #include "MSAccessible.h"
 
-class Window;
 namespace ui
 {
+	class Window;
 	class MSAccessibleWindow
 		: public MSAccessible
 	{
@@ -14,6 +14,7 @@ namespace ui
 		MSAccessibleWindow(Window* pWindow);
 		virtual ~MSAccessibleWindow();
 	public:
+		void TryReloadChildren() override;
 
 	protected:
 		Window* m_pWindow;

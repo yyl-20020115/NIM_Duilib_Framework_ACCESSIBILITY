@@ -72,7 +72,7 @@ void ListBox::HandleMessage(EventArgs& event)
 		break;
 	case kEventMouseScrollWheel:
 	{
-		int detaValue = event.wParam;
+		int detaValue = (int)event.wParam;
 		if (detaValue > 0) {
 			if (m_bScrollSelect) {
 				SelectItem(FindSelectable(m_iCurSel - 1, false), true);
@@ -300,10 +300,10 @@ bool ListBox::AddAt(Control* pControl, std::size_t iIndex)
 	ListContainerElement* pListItem = dynamic_cast<ListContainerElement*>(pControl);
 	if( pListItem != NULL ) {
 		pListItem->SetOwner(this);
-		pListItem->SetIndex(iIndex);
+		pListItem->SetIndex((int)iIndex);
 	}
 
-	for(int i = iIndex + 1; i < GetCount(); ++i) {
+	for(int i = (int)iIndex + 1; i < GetCount(); ++i) {
 		Control* p = GetItemAt(i);
 		pListItem = dynamic_cast<ListContainerElement*>(p);
 		if( pListItem != NULL ) {
@@ -326,7 +326,7 @@ bool ListBox::RemoveAt(std::size_t iIndex)
 {
 	if (!ScrollableBox::RemoveAt(iIndex)) return false;
 
-	for(int i = iIndex; i < GetCount(); ++i) {
+	for(int i = (int)iIndex; i < GetCount(); ++i) {
 		Control* p = GetItemAt(i);
 		ListContainerElement* pListItem = dynamic_cast<ListContainerElement*>(p);
 		if( pListItem != NULL ) pListItem->SetIndex(i);

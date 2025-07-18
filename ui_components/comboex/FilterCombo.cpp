@@ -122,7 +122,7 @@ LRESULT CFilterComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			EventArgs args;
 			args.pSender = m_pOwner->GetListBox();
-			args.chKey = wParam;
+			args.chKey = (TCHAR)wParam;
 			if (uMsg == WM_CHAR)
 				args.Type = kEventChar;
 			else if (uMsg == WM_KEYDOWN)
@@ -141,7 +141,7 @@ LRESULT CFilterComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			EventArgs args;
 			args.pSender = m_pOwner->GetListBox();
-			args.chKey = wParam;
+			args.chKey = (TCHAR)wParam;
 			args.Type = kEventSystemKey;
 			args.wParam = 0;
 			args.lParam = 0;

@@ -1883,7 +1883,7 @@ HRESULT RichEdit::TxSendMessage(UINT msg, WPARAM wParam, LPARAM lParam, LRESULT 
 {
     if( m_pTwh ) {
         LRESULT lr =  m_pTwh->GetTextServices()->TxSendMessage(msg, wParam, lParam, plresult);
-		return lr;
+		return (HRESULT)lr;
     }
     return S_FALSE;
 }

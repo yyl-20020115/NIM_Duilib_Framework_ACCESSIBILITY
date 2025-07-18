@@ -407,7 +407,7 @@ IFACEMETHODIMP UIAWindowProvider::Move(double x, double y)
 
 	UiRect rcPos = m_pWnd->GetPos();
 
-	m_pWnd->SetPos(UiRect(x, y, x + rcPos.GetWidth(), y + rcPos.GetHeight()),
+	m_pWnd->SetPos(UiRect((int)x, (int)y, (int)x + rcPos.GetWidth(), (int)y + rcPos.GetHeight()),
 		false, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 
 	return S_OK;
@@ -420,7 +420,7 @@ IFACEMETHODIMP UIAWindowProvider::Resize(double width, double height)
 	CSize rcMinSize = m_pWnd->GetMinInfo();
 	CSize rcMaxiSize = m_pWnd->GetMaxInfo();
 
-	m_pWnd->Resize(width, height, false, false);
+	m_pWnd->Resize((int)width, (int)height, false, false);
 
 	return S_OK;
 }

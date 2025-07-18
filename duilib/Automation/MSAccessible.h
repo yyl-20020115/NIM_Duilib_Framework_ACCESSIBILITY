@@ -6,13 +6,16 @@
 
 namespace ui
 {
-	class MSAccessible 
+	class MSAccessible
         : public IAccessible
 		, public IEnumVARIANT
 	{
 	public:
-		MSAccessible();
+        MSAccessible();
 		virtual ~MSAccessible();
+    public:
+        virtual void TryReloadChildren();
+
     public:
 		void SetRootAndParent(HWND hWnd, IAccessible* pRoot, IAccessible* pParent);
         IAccessible* GetRoot() const;

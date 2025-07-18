@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include <shlwapi.h>
-#include "Automation\MSAccessibleBox.h"
 #include "Automation\MSAccessibleWindow.h"
 
 
@@ -418,6 +417,8 @@ UIAWindowProvider* Window::GetUIAProvider()
 	return m_pUIAProvider;
 }
 #endif
+#if defined(ENABLE_ACCESSIBLE)
+
 MSAccessible* Window::GetAccessible()
 {
 	if(m_pAccessible == NULL)
@@ -427,12 +428,13 @@ MSAccessible* Window::GetAccessible()
 			ASSERT(FALSE);
 			return NULL;
 		}
-		((MSAccessible*)m_pAccessible)->SetRootAndParent(
-			this->m_hWnd, nullptr, nullptr);
+		Control* pc = this->GetRoot();
+		m_pAccessible->SetRootAndParent(
+			this->m_hWnd, pc!=nullptr? pc->GetAccessible():nullptr, nullptr);
 	}
 	return m_pAccessible;
 }
-
+#endif
 /////////////////////////////////////////////////////////////////////////////////////
 //
 //
@@ -1219,13 +1221,13 @@ LRESULT Window::DoHandlMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& ha
 	case WM_IME_STARTCOMPOSITION:
 	{
 		if (m_pFocus == NULL) break;
-		m_pFocus->HandleMessageTemplate(kEventImeStartComposition, wParam, lParam, wParam);
+		m_pFocus->HandleMessageTemplate(kEventImeStartComposition, wParam, lParam, (TCHAR)wParam);
 	}
 	break;
 	case WM_IME_ENDCOMPOSITION:
 	{
 		if (m_pFocus == NULL) break;
-		m_pFocus->HandleMessageTemplate(kEventImeEndComposition, wParam, lParam, wParam);
+		m_pFocus->HandleMessageTemplate(kEventImeEndComposition, wParam, lParam, (TCHAR)wParam);
 	}
 	break;
 	case WM_MOUSEWHEEL:
@@ -1464,7 +1466,7 @@ LRESULT Window::DoHandlMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& ha
 	{
 		if (m_pFocus == NULL) break;
 
-		m_pFocus->HandleMessageTemplate(kEventChar, wParam, lParam, wParam);
+		m_pFocus->HandleMessageTemplate(kEventChar, wParam, lParam, (TCHAR)wParam);
 	}
 	break;
 	case WM_KEYDOWN:
@@ -1481,14 +1483,14 @@ LRESULT Window::DoHandlMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& ha
 		}
 
 		m_pEventKey = m_pFocus;
-		m_pFocus->HandleMessageTemplate(kEventKeyDown, wParam, lParam, wParam);
+		m_pFocus->HandleMessageTemplate(kEventKeyDown, wParam, lParam, (TCHAR)wParam);
 	}
 	break;
 	case WM_KEYUP:
 	{
 		if (m_pEventKey == NULL) break;
 
-		m_pEventKey->HandleMessageTemplate(kEventKeyUp, wParam, lParam, wParam);
+		m_pEventKey->HandleMessageTemplate(kEventKeyUp, wParam, lParam, (TCHAR)wParam);
 		m_pEventKey = NULL;
 	}
 	break;
@@ -2015,7 +2017,7 @@ void Window::Paint()
 		CPoint pt(rcWindow.left, rcWindow.top);
 		CSize szWindow(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
 		CPoint ptSrc;
-		BLENDFUNCTION bf = { AC_SRC_OVER, 0, m_nAlpha, AC_SRC_ALPHA };
+		BLENDFUNCTION bf = { AC_SRC_OVER, 0, (BYTE)m_nAlpha, AC_SRC_ALPHA };
 		::UpdateLayeredWindow(m_hWnd, NULL, &pt, &szWindow, m_renderContext->GetDC(), &ptSrc, 0, &bf, ULW_ALPHA);
 	}
 	else {

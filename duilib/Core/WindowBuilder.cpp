@@ -25,7 +25,7 @@ Box* WindowBuilder::Create(STRINGorID xml, CreateControlCallback pCallback,
 			if (hGlobal)
 			{
 				BYTE *data = (BYTE*)GlobalLock(hGlobal);
-				DWORD len = GlobalSize(hGlobal);
+				DWORD len = (DWORD)GlobalSize(hGlobal);
 
 				bool ret = m_xml.LoadFromMem(data, len);
 

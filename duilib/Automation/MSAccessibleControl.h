@@ -15,6 +15,8 @@ namespace ui
 		MSAccessibleControl(Control* pControl);
 		virtual ~MSAccessibleControl();
 	public:
+		
+		void TryReloadChildren() override;
 
 
 	protected:

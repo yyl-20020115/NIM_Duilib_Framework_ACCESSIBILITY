@@ -4,6 +4,40 @@
 
 namespace ui
 {
+    typedef UINT(*Ptr_GetDpiForWindow)(HWND hwnd);
+
+    UINT GetDpiForWindowWrapper(
+        HWND hwnd
+    ) {
+        HMODULE h = LoadLibraryEx(_T("user32.dll"), nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+        if (h != NULL) {
+            Ptr_GetDpiForWindow p = (Ptr_GetDpiForWindow)GetProcAddress(h, "GetDpiForWindow");
+            if (p != NULL) {
+                return p(hwnd);
+            }
+        }
+        return 0;
+    }
+
+    float GetScreenDisplayScale()
+    {
+        const UINT zoom_table[] = { 96,120,144,192 };
+        const float dpi_table[] = { 1,1.25,1.5,2 };
+
+        UINT zoom = GetDpiForWindowWrapper(GetDesktopWindow());
+
+        float ret = 1.0f;
+        for (size_t i = 0; i < sizeof(zoom_table) / sizeof(zoom_table[0]); i++)
+        {
+            if (zoom == zoom_table[i])
+            {
+                ret = dpi_table[i];
+                break;
+            }
+        }
+        return ret;
+    }
+
     MSAccessible::MSAccessible()
         : m_hWnd(nullptr)
         , m_pRoot(nullptr)
@@ -111,6 +145,7 @@ namespace ui
 
     HRESULT STDMETHODCALLTYPE MSAccessible::Reset(void)
     {
+        this->TryReloadChildren();
         m_enumPos = 0;
         return S_OK;
     }
@@ -150,6 +185,7 @@ namespace ui
     HRESULT STDMETHODCALLTYPE MSAccessible::get_accChildCount(long* pcountChildren)
     {
         if (!pcountChildren) return E_INVALIDARG;
+        this->TryReloadChildren();
         *pcountChildren = static_cast<long>(m_children.size());
         return S_OK;
     }
@@ -641,6 +677,8 @@ namespace ui
         // 其它选择标志未实现
         return E_NOTIMPL;
     }
+
+
     HRESULT STDMETHODCALLTYPE MSAccessible::accLocation(long* pxLeft, long* pyTop, long* pcxWidth, long* pcyHeight, VARIANT varChild)
     {
         if (!pxLeft || !pyTop || !pcxWidth || !pcyHeight)
@@ -659,10 +697,11 @@ namespace ui
         if (!::GetWindowRect(m_hWnd, &rc))
             return S_FALSE;
 
-        *pxLeft = rc.left;
-        *pyTop = rc.top;
-        *pcxWidth = rc.right - rc.left;
-        *pcyHeight = rc.bottom - rc.top;
+		float ratio = GetScreenDisplayScale();
+        *pxLeft = (long)(rc.left * ratio);
+        *pyTop = (long)(rc.top * ratio);
+        *pcxWidth = (long)((rc.right - rc.left)*ratio);
+        *pcyHeight = (long)((rc.bottom - rc.top)*ratio);
 
         return S_OK;
     }
@@ -903,7 +942,12 @@ namespace ui
     {
         return E_NOTIMPL;
     }
+    void MSAccessible::TryReloadChildren()
+    {
+        for (auto mc : m_children) mc->Release();
+        this->m_children.clear();
 
+    }
     // 析构函数
     MSAccessible::~MSAccessible()
     {
@@ -914,5 +958,4 @@ namespace ui
         if (m_value) SysFreeString(m_value);
         m_value = nullptr;
     }
-
 }
