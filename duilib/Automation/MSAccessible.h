@@ -162,13 +162,14 @@ namespace ui
             _Out_opt_  EXCEPINFO* pExcepInfo,
             /* [annotation][out] */
             _Out_opt_  UINT* puArgErr) override;
-	private:
+	protected:
 		HWND m_hWnd;
 		IAccessible* m_pRoot;
         IAccessible* m_pParent;
         ULONG m_refCount;
         size_t m_enumPos;
-
+        BSTR m_name;
+        BSTR m_value;
         std::vector<IAccessible*> m_children;
 	};
 }

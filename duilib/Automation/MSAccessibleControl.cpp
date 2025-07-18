@@ -5,6 +5,7 @@ namespace ui
 	MSAccessibleControl::MSAccessibleControl(Control* pControl)
 		:m_pControl(pControl)
 	{
+		this->m_hWnd = pControl->GetWindow()->GetHWND();
 	}
 	MSAccessibleControl::~MSAccessibleControl()
 	{

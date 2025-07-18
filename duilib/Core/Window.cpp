@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include <shlwapi.h>
 #include "Automation\MSAccessibleBox.h"
+#include "Automation\MSAccessibleWindow.h"
+
 
 namespace ui 
 {
@@ -68,7 +70,8 @@ Window::Window() :
 	m_aTranslateAccelerator(),
 	m_heightPercent(0),
 	m_closeFlag(),
-	m_pUIAProvider(nullptr)
+	m_pUIAProvider(nullptr),
+	m_pAccessible(nullptr)
 {
 	LOGFONT lf = { 0 };
 	::GetObject(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
@@ -101,6 +104,10 @@ Window::~Window()
 	// Reset other parts...
 	if (m_hwndTooltip != NULL) ::DestroyWindow(m_hwndTooltip);
 	if (m_hDcPaint != NULL) ::ReleaseDC(m_hWnd, m_hDcPaint);
+	if (m_pAccessible != nullptr) {
+		m_pAccessible->Release();
+		m_pAccessible = nullptr;
+	}
 }
 
 HWND Window::GetHWND() const 
@@ -272,7 +279,7 @@ void Window::CenterWindow()
 	if (hWndCenter!=NULL)
 		hWnd=hWndCenter;
 
-	// 处理多显示器模式下屏幕居中
+	// 处理多显示器模式下屏幕居�?
 	MONITORINFO oMonitor = {};
 	oMonitor.cbSize = sizeof(oMonitor);
 	::GetMonitorInfo(::MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST), &oMonitor);
@@ -415,7 +422,7 @@ MSAccessible* Window::GetAccessible()
 {
 	if(m_pAccessible == NULL)
 	{
-		if ((m_pAccessible = new (std::nothrow) MSAccessible()) == NULL)
+		if ((m_pAccessible = new (std::nothrow) MSAccessibleWindow(this)) == NULL)
 		{
 			ASSERT(FALSE);
 			return NULL;
@@ -1239,7 +1246,7 @@ LRESULT Window::DoHandlMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& ha
 		unsigned int nNumInputs = (int)wParam;
 		TOUCHINPUT* pInputs = new TOUCHINPUT[nNumInputs]; 
 
-		// 只关心第一个触摸位置
+		// 只关心第一个触摸位�?
 		if (nNumInputs >= 1 && GetTouchInputInfoWrapper((HTOUCHINPUT)lParam, nNumInputs, pInputs, sizeof(TOUCHINPUT)))
 		{
 			if (pInputs[0].dwID != 0)
@@ -1384,7 +1391,7 @@ LRESULT Window::DoHandlMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& ha
 				break;
 
 			m_ptLastMousePos = pt;
-			// 如果没有按下，则不设置handled，程序会转换为WM_BUTTON类消息
+			// 如果没有按下，则不设置handled，程序会转换为WM_BUTTON类消�?
 			if (m_pEventPointer == NULL) break;
 
 			if (!HandleMouseEnterLeave(pt, wParam, lParam)) break;
@@ -1401,7 +1408,7 @@ LRESULT Window::DoHandlMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& ha
 		case WM_POINTERCAPTURECHANGED:
 			ReleaseEventClick(true, wParam, lParam);
 			m_ptLastMousePos = pt;
-			// 如果没有按下，则不设置handled，程序会转换为WM_BUTTON类消息
+			// 如果没有按下，则不设置handled，程序会转换为WM_BUTTON类消�?
 			ReleaseCapture();
 			if (m_pEventPointer == NULL) break;
 
@@ -1975,7 +1982,7 @@ void Window::Paint()
 	// alpha修复
 	if (m_bIsLayeredWindow) {
 		if (m_shadow.IsShadowAttached() && m_renderOffset.x == 0 && m_renderOffset.y == 0) {
-			//补救由于Gdi绘制造成的alpha通道为0
+			//补救由于Gdi绘制造成的alpha通道�?
 			UiRect rcNewPaint = rcPaint;
 			rcNewPaint.Intersect(m_pRoot->GetPaddingPos());
 			UiRect rcRootPadding = m_pRoot->GetLayout()->GetPadding();
@@ -2003,7 +2010,7 @@ void Window::Paint()
 		}
 	}
 
-	// 渲染到窗口
+	// 渲染到窗�?
 	if (m_bIsLayeredWindow) {
 		CPoint pt(rcWindow.left, rcWindow.top);
 		CSize szWindow(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);

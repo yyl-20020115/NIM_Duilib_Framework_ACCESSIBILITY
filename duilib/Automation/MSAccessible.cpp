@@ -11,6 +11,8 @@ namespace ui
         , m_refCount(1) 
         , m_children()
         , m_enumPos(0)
+        , m_name()
+        , m_value()
     {
     }
 
@@ -188,17 +190,44 @@ namespace ui
 
         if (!m_hWnd)
             return S_FALSE;
+        if (this->m_name == nullptr) {
+            // 获取窗口标题
+            wchar_t szText[1024] = { 0 };
+            int len = ::GetClassNameW(m_hWnd, szText, _countof(szText));
+            if (len > 0) {
+                this->m_name = ::SysAllocString(szText);
+            }
 
-        // 获取窗口标题
-        wchar_t szText[1024] = {0};
-        int len = ::GetClassNameW(m_hWnd, szText, _countof(szText));
-        if (len > 0) {
-            *pszName = ::SysAllocString(szText);
-            return (*pszName) ? S_OK : E_OUTOFMEMORY;
         }
+        if (this->m_name!=nullptr) {
+            *pszName = ::SysAllocString(this->m_name);
+            return (*pszName) ? S_OK : E_OUTOFMEMORY;
+		}
 
         return S_FALSE;
     }
+    HRESULT STDMETHODCALLTYPE MSAccessible::put_accValue(VARIANT varChild, BSTR szValue)
+    {
+        // 只支持自身（CHILDID_SELF）
+        if (varChild.vt != VT_I4 || varChild.lVal != CHILDID_SELF)
+            return S_FALSE;
+
+        // 释放旧的 m_value
+        if (m_value) {
+            SysFreeString(m_value);
+            m_value = nullptr;
+        }
+
+        // 赋值新 value
+        if (szValue) {
+            m_value = SysAllocString(szValue);
+            if (!m_value)
+                return E_OUTOFMEMORY;
+        }
+
+        return S_OK;
+    }
+
     HRESULT STDMETHODCALLTYPE MSAccessible::get_accValue(VARIANT varChild, BSTR* pszValue)
     {
         if (!pszValue) return E_INVALIDARG;
@@ -208,14 +237,8 @@ namespace ui
         if (varChild.vt != VT_I4 || varChild.lVal != CHILDID_SELF)
             return S_FALSE;
 
-        if (!m_hWnd)
-            return S_FALSE;
-
-        // 获取窗口文本
-        wchar_t szText[1024] = {0};
-        int len = ::GetWindowTextW(m_hWnd, szText, _countof(szText));
-        if (len > 0) {
-            *pszValue = ::SysAllocString(szText);
+        if (m_value) {
+            *pszValue = SysAllocString(m_value);
             return (*pszValue) ? S_OK : E_OUTOFMEMORY;
         }
 
@@ -223,8 +246,7 @@ namespace ui
     }
     HRESULT STDMETHODCALLTYPE MSAccessible::get_accDescription(VARIANT varChild, BSTR* pszDescription)
     {
-        // 直接调用 get_accValue 并返回其结果
-        return get_accValue(varChild, pszDescription);
+        return get_accName(varChild, pszDescription);
     }
     HRESULT STDMETHODCALLTYPE MSAccessible::get_accRole(VARIANT varChild, VARIANT* pvarRole)
     {
@@ -239,7 +261,7 @@ namespace ui
         LONG role = ROLE_SYSTEM_WINDOW;
 
         if (m_hWnd) {
-            wchar_t className[128] = {0};
+            wchar_t className[256] = {0};
             ::GetClassNameW(m_hWnd, className, _countof(className));
 
             // 常见标准控件
@@ -359,7 +381,7 @@ namespace ui
 
             // 是否可选中
             // 可根据控件类型扩展
-            wchar_t className[128] = {0};
+            wchar_t className[256] = {0};
             ::GetClassNameW(m_hWnd, className, _countof(className));
             if (wcscmp(className, L"Button") == 0) {
                 LONG style = static_cast<LONG>(::GetWindowLongPtrW(m_hWnd, GWL_STYLE));
@@ -381,7 +403,7 @@ namespace ui
     }
     HRESULT STDMETHODCALLTYPE MSAccessible::get_accHelp(VARIANT varChild, BSTR* pszDescription)
     {
-        return get_accValue(varChild, pszDescription);
+        return get_accName(varChild, pszDescription);
     }
     HRESULT STDMETHODCALLTYPE MSAccessible::get_accHelpTopic(BSTR* pszHelpFile, VARIANT varChild, long* pidTopic)
     {
@@ -397,7 +419,7 @@ namespace ui
         // 示例：假设帮助文件为 "help.chm"，主题ID为 0
         // 实际项目可根据窗口类名或控件类型返回不同的帮助文件和主题
         if (m_hWnd) {
-            wchar_t className[128] = {0};
+            wchar_t className[256] = {0};
             ::GetClassNameW(m_hWnd, className, _countof(className));
             // 可根据 className 设置不同帮助
             *pszHelpFile = ::SysAllocString(L"help.chm");
@@ -420,7 +442,7 @@ namespace ui
             return S_FALSE;
 
         // 获取窗口类名
-        wchar_t className[128] = {0};
+        wchar_t className[256] = {0};
         ::GetClassNameW(m_hWnd, className, _countof(className));
 
         // 获取窗口文本
@@ -525,7 +547,7 @@ namespace ui
         if (!m_hWnd)
             return S_FALSE;
 
-        wchar_t className[128] = {0};
+        wchar_t className[256] = {0};
         ::GetClassNameW(m_hWnd, className, _countof(className));
 
         // Button/CheckBox/RadioButton
@@ -793,7 +815,7 @@ namespace ui
         if (!m_hWnd)
             return S_FALSE;
 
-        wchar_t className[128] = {0};
+        wchar_t className[256] = {0};
         ::GetClassNameW(m_hWnd, className, _countof(className));
 
         // 复选框/单选框
@@ -841,13 +863,26 @@ namespace ui
         ::SetFocus(m_hWnd);
         return S_OK;
     }
-    HRESULT STDMETHODCALLTYPE MSAccessible::put_accName(VARIANT, BSTR)
+    HRESULT STDMETHODCALLTYPE MSAccessible::put_accName(VARIANT varChild, BSTR szName)
     {
-        return E_NOTIMPL;
-    }
-    HRESULT STDMETHODCALLTYPE MSAccessible::put_accValue(VARIANT, BSTR)
-    {
-        return E_NOTIMPL;
+        // 只支持自身（CHILDID_SELF）
+        if (varChild.vt != VT_I4 || varChild.lVal != CHILDID_SELF)
+            return S_FALSE;
+
+        // 释放旧的 m_name
+        if (m_name) {
+            SysFreeString(m_name);
+            m_name = nullptr;
+        }
+
+        // 赋值新名称
+        if (szName) {
+            m_name = SysAllocString(szName);
+            if (!m_name)
+                return E_OUTOFMEMORY;
+        }
+
+        return S_OK;
     }
 
     // IDispatch (最基本的实现)
@@ -874,6 +909,10 @@ namespace ui
     {
         if (m_pRoot) m_pRoot->Release();
         m_pRoot = nullptr;
+		if (m_name) SysFreeString(m_name);
+        m_name = nullptr;
+        if (m_value) SysFreeString(m_value);
+        m_value = nullptr;
     }
 
 }
