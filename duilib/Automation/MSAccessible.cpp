@@ -235,9 +235,10 @@ namespace ui
 		if (!m_hWnd)
 			return S_FALSE;
 		if (this->m_name == nullptr) {
+			
 			// 获取窗口标题
-			wchar_t szText[1024] = { 0 };
-			int len = ::GetClassNameW(m_hWnd, szText, _countof(szText));
+			WCHAR szText[1024] = { 0 };
+			int len = ::GetClassName(m_hWnd, szText, _countof(szText));
 			if (len > 0) {
 				this->m_name = ::SysAllocString(szText);
 			}
@@ -809,13 +810,8 @@ namespace ui
 
 
 			if (navDir == NAVDIR_NEXT) {
-				//OutputDebugString(this->m_name);
-				//OutputDebugString(_T("\nNEXT CHILD1\n"));
-
 				++it;
 				if (it != siblings.end() && *it) {
-					//OutputDebugString(this->m_name);
-					//OutputDebugString(_T("\nNEXT CHILD2\n"));
 					pvarEndUpAt->vt = VT_DISPATCH;
 					(*it)->AddRef();
 					pvarEndUpAt->pdispVal = *it;
@@ -845,13 +841,11 @@ namespace ui
 					last->AddRef();
 					pvarEndUpAt->pdispVal = last;
 					return S_OK;
-
 				}
 			}
 			return S_FALSE;
 		}
 
-		// 其它导航类型未实现
 		return S_FALSE;
 	}
 	HRESULT STDMETHODCALLTYPE MSAccessible::accHitTest(long xLeft, long yTop, VARIANT* pvarChild)
@@ -861,11 +855,9 @@ namespace ui
 
 		VariantInit(pvarChild);
 
-		// 检查窗口句柄
 		if (!m_hWnd)
 			return S_FALSE;
 
-		// 获取窗口矩形（屏幕坐标）
 		RECT rcWnd = { 0 };
 		if (!::GetWindowRect(m_hWnd, &rcWnd))
 			return S_FALSE;
@@ -876,21 +868,18 @@ namespace ui
 		rcWnd.top = (int)(rcWnd.top * ratio);
 		rcWnd.bottom = (int)(rcWnd.bottom * ratio);
 
-		// 判断点是否在窗口内
 		if (xLeft < rcWnd.left || xLeft >= rcWnd.right ||
 			yTop < rcWnd.top || yTop >= rcWnd.bottom)
 		{
 			return S_FALSE;
 		}
 
-		// 如果没有子元素，返回自身
 		if (m_children.empty()) {
 			pvarChild->vt = VT_I4;
 			pvarChild->lVal = CHILDID_SELF;
 			return S_OK;
 		}
 
-		// 遍历子元素，递归调用 accHitTest
 		for (size_t i = 0; i < m_children.size(); ++i) {
 			IAccessible* pChild = m_children[i];
 			if (!pChild)
@@ -899,11 +888,9 @@ namespace ui
 			VARIANT varHit = {};
 			HRESULT hr = pChild->accHitTest(xLeft, yTop, &varHit);
 			if (SUCCEEDED(hr) && varHit.vt != VT_EMPTY && varHit.vt != VT_NULL && varHit.vt != VT_I4 /* not S_FALSE */) {
-				// 命中子元素，返回子元素
 				*pvarChild = varHit;
 				return S_OK;
 			}
-			// 如果命中的是子对象本身
 			if (SUCCEEDED(hr) && varHit.vt == VT_I4 && varHit.lVal == CHILDID_SELF) {
 				pvarChild->vt = VT_DISPATCH;
 				pChild->AddRef();
@@ -913,14 +900,12 @@ namespace ui
 			VariantClear(&varHit);
 		}
 
-		// 没有命中任何子元素，返回自身
 		pvarChild->vt = VT_I4;
 		pvarChild->lVal = CHILDID_SELF;
 		return S_OK;
 	}
 	HRESULT STDMETHODCALLTYPE MSAccessible::accDoDefaultAction(VARIANT varChild)
 	{
-		// 只支持自身（CHILDID_SELF）
 		if (varChild.vt != VT_I4 || varChild.lVal != CHILDID_SELF)
 			return S_FALSE;
 

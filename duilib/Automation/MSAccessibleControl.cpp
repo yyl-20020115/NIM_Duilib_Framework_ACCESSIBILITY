@@ -110,6 +110,32 @@ namespace ui
 		pvarChild->lVal = CHILDID_SELF;
 		return S_OK;
 	}
+	HRESULT __stdcall MSAccessibleControl::get_accName(VARIANT varChild, BSTR* pszName)
+	{
+		if (this->m_pControl == nullptr) return E_FAIL;
+		if (!pszName) return E_INVALIDARG;
+		*pszName = nullptr;
+
+		// 只支持自身（CHILDID_SELF）
+		if (varChild.vt != VT_I4 || varChild.lVal != CHILDID_SELF)
+			return S_FALSE;
+
+		if (!m_hWnd)
+			return S_FALSE;
+		if (this->m_name == nullptr) {
+			this->m_name = ::SysAllocString(this->m_pControl->GetName().c_str());
+
+		}
+		if (this->m_name != nullptr) {
+			*pszName = ::SysAllocString(this->m_name);
+			return (*pszName) ? S_OK : E_OUTOFMEMORY;
+		}
+
+		return S_FALSE;
+
+
+		return S_OK;
+	}
 	void MSAccessibleControl::TryReloadChildren()
 	{
 		__super::TryReloadChildren();

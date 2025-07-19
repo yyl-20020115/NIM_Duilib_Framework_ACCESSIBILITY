@@ -14,6 +14,9 @@ namespace ui
 		MSAccessibleButton(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleButton();
 	public:
+		HRESULT STDMETHODCALLTYPE accDoDefaultAction(VARIANT varChild) override;
+
+	public:
 		void TryReloadChildren() override;
 	};
 

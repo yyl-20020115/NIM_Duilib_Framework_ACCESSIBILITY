@@ -19,6 +19,10 @@ namespace ui
 
 		HRESULT STDMETHODCALLTYPE accHitTest(long xLeft, long yTop, VARIANT* pvarChild) override;
 
+		HRESULT STDMETHODCALLTYPE get_accName(
+			/* [optional][in] */ VARIANT varChild,
+			/* [retval][out] */ __RPC__deref_out_opt BSTR* pszName) override;
+
 	public:	
 		void TryReloadChildren() override;
 

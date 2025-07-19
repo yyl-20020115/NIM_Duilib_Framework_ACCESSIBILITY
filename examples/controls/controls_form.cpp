@@ -54,7 +54,7 @@ void ControlForm::InitWindow()
 	 * 不要在每次使用的时候都需要 FindControl，否则会影响性能代码不易读
 	 */
 
-	/* Initialize ListBox data */
+	 /* Initialize ListBox data */
 	ui::ListBox* list = static_cast<ui::ListBox*>(FindControl(L"list"));
 	for (auto i = 0; i < 30; i++)
 	{
@@ -104,7 +104,7 @@ void ControlForm::InitWindow()
 	nim_comp::CheckCombo* check_combo = static_cast<nim_comp::CheckCombo*>(FindControl(L"check_combo"));
 	for (auto i = 0; i < 6; i++)
 	{
-		ui::CheckBox *item = new ui::CheckBox;
+		ui::CheckBox* item = new ui::CheckBox;
 		item->SetFixedWidth(DUI_LENGTH_STRETCH);
 		item->SetFixedHeight(24);
 		item->SetUTF8Text(checks[i]);
@@ -125,7 +125,7 @@ void ControlForm::InitWindow()
 	char buf[16] = {};
 	for (auto i = 0; i < 100; i++)
 	{
-		nim_comp::ListElementMatch *item = new nim_comp::ListElementMatch;
+		nim_comp::ListElementMatch* item = new nim_comp::ListElementMatch;
 		item->SetFixedHeight(20);
 		//ui::GlobalManager::FillBoxWithCache(item, L"date_export/combo/date_item.xml");
 		//Label *label = new label;
@@ -143,10 +143,10 @@ void ControlForm::InitWindow()
 
 	/* Post repeat task to update progress value 200 milliseconds once */
 	/* Using ToWeakCallback to protect closure when if [ControlForm] was destoryed */
-	nbase::ThreadManager::PostRepeatedTask(kThreadGlobalMisc, ToWeakCallback([this](){
+	nbase::ThreadManager::PostRepeatedTask(kThreadGlobalMisc, ToWeakCallback([this]() {
 		nbase::TimeDelta time_delta = nbase::TimeDelta::FromMicroseconds(nbase::Time::Now().ToInternalValue());
 		nbase::ThreadManager::PostTask(kThreadUI, nbase::Bind(&ControlForm::OnProgressValueChagned, this, time_delta.ToMilliseconds() % 100));
-	}), nbase::TimeDelta::FromMilliseconds(200));
+		}), nbase::TimeDelta::FromMilliseconds(200));
 
 	/* Show settings menu */
 	ui::Button* settings = static_cast<ui::Button*>(FindControl(L"settings"));
@@ -175,7 +175,7 @@ void ControlForm::InitWindow()
 		/* About menu */
 		nim_comp::CMenuElementUI* menu_about = static_cast<nim_comp::CMenuElementUI*>(sub_menu->FindControl(L"about"));
 		menu_about->AttachClick([this](ui::EventArgs* args) {
-			AboutForm *about_form = (AboutForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(AboutForm::kClassName, AboutForm::kClassName));
+			AboutForm* about_form = (AboutForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(AboutForm::kClassName, AboutForm::kClassName));
 			if (!about_form)
 			{
 				about_form = new AboutForm();
@@ -188,10 +188,44 @@ void ControlForm::InitWindow()
 				about_form->ActiveWindow();
 			}
 			return true;
-		});
+			});
+
 
 		return true;
-	});
+		});
+
+
+	ui::Button* red = static_cast<ui::Button*>(FindControl(
+		L"blue"));
+	if (red != nullptr) {
+		red->SetText(L"Show About");
+		red->SetFixedWidth(100);
+		red->SetFixedHeight(30);
+		red->SetFont(L"system_14");
+		red->SetTextPadding({ 20, 0, 20, 0 });
+	}
+	//red->AttachClick([this](ui::EventArgs* args) {
+	//	RECT rect = args->pSender->GetPos();
+	//	ui::CPoint point;
+	//	point.x = rect.left - 175;
+	//	point.y = rect.top + 10;
+	//	::ClientToScreen(m_hWnd, &point);
+	//	AboutForm* about_form = (AboutForm*)(nim_comp::WindowsManager::GetInstance()->GetWindow(AboutForm::kClassName, AboutForm::kClassName));
+	//	if (!about_form)
+	//	{
+	//		about_form = new AboutForm();
+	//		about_form->Create(GetHWND(), AboutForm::kClassName, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX, 0);
+	//		about_form->CenterWindow();
+	//		about_form->ShowWindow();
+	//	}
+	//	else
+	//	{
+	//		about_form->ActiveWindow();
+	//	}
+
+		//return true;
+		//});
+
 }
 
 LRESULT ControlForm::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -213,7 +247,7 @@ void ControlForm::LoadRichEditData()
 		length = ifs.tellg();
 		ifs.seekg(0, std::ios_base::beg);
 
-		xml.resize(static_cast<unsigned int>(length)+1);
+		xml.resize(static_cast<unsigned int>(length) + 1);
 		ifs.read(&xml[0], length);
 
 		ifs.close();
