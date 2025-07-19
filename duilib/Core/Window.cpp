@@ -428,9 +428,7 @@ MSAccessible* Window::GetAccessible()
 			ASSERT(FALSE);
 			return NULL;
 		}
-		Control* pc = this->GetRoot();
-		m_pAccessible->SetRootAndParent(
-			this->m_hWnd, pc!=nullptr? pc->GetAccessible():nullptr, nullptr);
+		m_pAccessible->SetHwnd(this->m_hWnd);
 	}
 	return m_pAccessible;
 }

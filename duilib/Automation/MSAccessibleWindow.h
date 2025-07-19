@@ -11,7 +11,7 @@ namespace ui
 		: public MSAccessible
 	{
 	public:
-		MSAccessibleWindow(Window* pWindow);
+		MSAccessibleWindow(Window* pWindow, MSAccessible* pParent = nullptr);
 		virtual ~MSAccessibleWindow();
 	public:
 		void TryReloadChildren() override;

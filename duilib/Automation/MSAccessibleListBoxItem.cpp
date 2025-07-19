@@ -2,11 +2,15 @@
 
 namespace ui
 {
-	MSAccessibleListBoxItem::MSAccessibleListBoxItem(Control* pControl)
-		:MSAccessibleCheckBox(pControl)
+	MSAccessibleListBoxItem::MSAccessibleListBoxItem(Control* pControl, MSAccessible* pParent)
+		:MSAccessibleCheckBox(pControl,pParent)
 	{
 	}
 	MSAccessibleListBoxItem::~MSAccessibleListBoxItem()
 	{
+	}
+	void MSAccessibleListBoxItem::TryReloadChildren()
+	{
+		__super::TryReloadChildren();
 	}
 }

@@ -2,8 +2,8 @@
 
 namespace ui
 {
-	MSAccessibleBox::MSAccessibleBox(Control* pControl)
-		: MSAccessibleControl(pControl)
+	MSAccessibleBox::MSAccessibleBox(Control* pControl, MSAccessible* pParent)
+		: MSAccessibleControl(pControl, pParent)
 	{
 	}
 	MSAccessibleBox::~MSAccessibleBox()

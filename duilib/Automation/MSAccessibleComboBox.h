@@ -11,7 +11,7 @@ namespace ui
 		: public MSAccessibleControl
 	{
 	public:
-		MSAccessibleComboBox(Control* pControl);
+		MSAccessibleComboBox(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleComboBox();
 	public:
 

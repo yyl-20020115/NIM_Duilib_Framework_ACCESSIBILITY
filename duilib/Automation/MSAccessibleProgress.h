@@ -11,7 +11,7 @@ namespace ui
 		: public MSAccessibleLabel
 	{
 	public:
-		MSAccessibleProgress(Control* pControl);
+		MSAccessibleProgress(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleProgress();
 	public:
 

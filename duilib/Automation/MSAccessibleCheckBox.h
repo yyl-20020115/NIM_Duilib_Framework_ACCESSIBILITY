@@ -10,10 +10,10 @@ namespace ui
 		: public MSAccessibleButton
 	{
 	public:
-		MSAccessibleCheckBox(Control* pControl);
+		MSAccessibleCheckBox(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleCheckBox();
 	public:
-
+		void TryReloadChildren() override;
 	};
 
 }

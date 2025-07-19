@@ -12,15 +12,13 @@ namespace ui
 		: public MSAccessible
 	{
 	public:
-		MSAccessibleControl(Control* pControl);
+		MSAccessibleControl(Control* pControl,MSAccessible* pParent = nullptr);
 		virtual ~MSAccessibleControl();
 
 		HRESULT accLocation(long* pxLeft, long* pyTop, long* pcxWidth, long* pcyHeight, VARIANT varChild) override;
 
-	public:
-		
+	public:	
 		void TryReloadChildren() override;
-
 
 	protected:
 		Control* m_pControl;

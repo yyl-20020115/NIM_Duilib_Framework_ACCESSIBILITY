@@ -11,9 +11,10 @@ namespace ui
 		: public MSAccessibleCheckBox
 	{
 	public:
-		MSAccessibleListBoxItem(Control* pControl);
+		MSAccessibleListBoxItem(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleListBoxItem();
 	public:
+		void TryReloadChildren() override;
 
 	};
 

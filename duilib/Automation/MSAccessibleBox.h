@@ -11,7 +11,7 @@ namespace ui
 		: public MSAccessibleControl
 	{
 	public:
-		MSAccessibleBox(Control* pControl);
+		MSAccessibleBox(Control* pControl,MSAccessible* pParent);
 		virtual ~MSAccessibleBox();
 	public:
 

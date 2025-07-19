@@ -11,10 +11,10 @@ namespace ui
 		: public MSAccessibleControl
 	{
 	public:
-		MSAccessibleLabel(Control* pControl);
+		MSAccessibleLabel(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleLabel();
 	public:
-
+		void TryReloadChildren() override;
 	};
 
 }

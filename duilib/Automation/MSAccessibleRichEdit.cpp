@@ -2,8 +2,8 @@
 
 namespace ui
 {
-	MSAccessibleRichEdit::MSAccessibleRichEdit(Control* pControl)
-		:MSAccessibleLabel(pControl)
+	MSAccessibleRichEdit::MSAccessibleRichEdit(Control* pControl, MSAccessible* pParent)
+		:MSAccessibleLabel(pControl,pParent)
 	{
 	}
 	MSAccessibleRichEdit::~MSAccessibleRichEdit()

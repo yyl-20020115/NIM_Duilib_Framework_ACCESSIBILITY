@@ -235,14 +235,28 @@ UIAControlProvider* Box::GetUIAProvider()
 MSAccessible* Box::GetAccessible()
 {
 	if (m_pAccessible == NULL) {
-		m_pAccessible = new (std::nothrow)MSAccessibleBox(this);
+		auto p = this->GetParent();
+		if (p == nullptr) {
+			auto w = this->GetWindow();
+			m_pAccessible = new (std::nothrow)MSAccessibleBox(this, w->GetAccessible());
+		}
+		else {
+			m_pAccessible = new (std::nothrow)MSAccessibleBox(this, p->GetAccessible());
+		}
 	}
 	return m_pAccessible;
 }
 MSAccessible* ScrollableBox::GetAccessible()
 {
 	if (m_pAccessible == NULL) {
-		m_pAccessible = new (std::nothrow)MSAccessibleScrollableBox(this);
+		auto p = this->GetParent();
+		if (p == nullptr) {
+			auto w = this->GetWindow();
+			m_pAccessible = new (std::nothrow)MSAccessibleScrollableBox(this, w->GetAccessible());
+		}
+		else {
+			m_pAccessible = new (std::nothrow)MSAccessibleScrollableBox(this, p->GetAccessible());
+		}
 	}
 	return m_pAccessible;
 }

@@ -10,7 +10,7 @@ namespace ui
 		: public MSAccessibleLabel
 	{
 	public:
-		MSAccessibleRichEdit(Control* pControl);
+		MSAccessibleRichEdit(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleRichEdit();
 	public:
 

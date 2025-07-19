@@ -11,7 +11,7 @@ namespace ui
 		: public MSAccessibleControl
 	{
 	public:
-		MSAccessibleScrollBar(Control* pControl);
+		MSAccessibleScrollBar(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleScrollBar();
 	public:
 

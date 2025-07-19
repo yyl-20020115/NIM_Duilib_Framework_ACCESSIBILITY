@@ -3,8 +3,9 @@
 
 namespace ui
 {
-	MSAccessibleWindow::MSAccessibleWindow(Window* pWindow)
-		:m_pWindow(pWindow)
+	MSAccessibleWindow::MSAccessibleWindow(Window* pWindow, MSAccessible* pParent)
+		:MSAccessible(pParent)
+		,m_pWindow(pWindow)
 	{
 		if (pWindow != nullptr) {
 			this->m_hWnd = pWindow->GetHWND();
@@ -21,12 +22,12 @@ namespace ui
 	{
 		__super::TryReloadChildren();
 		if (this->m_pWindow != nullptr) {
-			Control* pc = this->m_pWindow->GetRoot();
+			auto pc = this->m_pWindow->GetRoot();
 			if (pc != nullptr) {
-				MSAccessible* ms =pc->GetAccessible();
+				auto ms =pc->GetAccessible();
 				if (ms != nullptr) {
-					ms->TryReloadChildren();
 					ms->AddRef();
+					ms->TryReloadChildren();
 					this->m_children.push_back(ms);
 				}
 			}

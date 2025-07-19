@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-const std::wstring ControlForm::kClassName = L"Controls";
+const std::wstring ControlForm::kClassName = L"Form";
 
 ControlForm::ControlForm()
 {

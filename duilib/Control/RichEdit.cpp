@@ -2192,7 +2192,8 @@ MSAccessible* RichEdit::GetAccessible()
 #if defined(ENABLE_ACCESSIBLE)
 	if (m_pAccessible == nullptr)
 	{
-		m_pAccessible = static_cast<MSAccessible*>(new (std::nothrow) MSAccessibleRichEdit(this));
+		auto p = this->GetParent();
+		m_pAccessible = static_cast<MSAccessible*>(new (std::nothrow) MSAccessibleRichEdit(this,p->GetAccessible()));
 	}
 	return m_pAccessible;
 #else

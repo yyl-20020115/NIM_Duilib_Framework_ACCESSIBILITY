@@ -2,8 +2,8 @@
 
 namespace ui
 {
-	MSAccessibleComboBox::MSAccessibleComboBox(Control* pControl)
-		:MSAccessibleControl(pControl)
+	MSAccessibleComboBox::MSAccessibleComboBox(Control* pControl, MSAccessible* pParent)
+		:MSAccessibleControl(pControl,pParent)
 	{
 	}
 	MSAccessibleComboBox::~MSAccessibleComboBox()

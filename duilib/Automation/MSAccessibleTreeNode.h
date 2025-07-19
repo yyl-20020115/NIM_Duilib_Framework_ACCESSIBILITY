@@ -11,10 +11,10 @@ namespace ui
 		: public MSAccessibleListBoxItem
 	{
 	public:
-		MSAccessibleTreeNode(Control* pControl);
+		MSAccessibleTreeNode(Control* pControl, MSAccessible* pParent);
 		virtual ~MSAccessibleTreeNode();
 	public:
-
+		void TryReloadChildren() override;
 	};
 
 }

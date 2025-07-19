@@ -11,15 +11,15 @@ namespace ui
 		, public IEnumVARIANT
 	{
 	public:
-        MSAccessible();
+        MSAccessible(MSAccessible* pParent = nullptr);
 		virtual ~MSAccessible();
     public:
         virtual void TryReloadChildren();
 
     public:
-		void SetRootAndParent(HWND hWnd, IAccessible* pRoot, IAccessible* pParent);
-        IAccessible* GetRoot() const;
-		IAccessible* GetParent() const;
+		void SetHwnd(HWND hWnd);
+        MSAccessible* GetParent() const;
+
     public:
         HWND GetWindowHandle() const;
     public:
@@ -167,12 +167,11 @@ namespace ui
             _Out_opt_  UINT* puArgErr) override;
 	protected:
 		HWND m_hWnd;
-		IAccessible* m_pRoot;
-        IAccessible* m_pParent;
+        MSAccessible* m_pParent;
         ULONG m_refCount;
         size_t m_enumPos;
         BSTR m_name;
         BSTR m_value;
-        std::vector<IAccessible*> m_children;
+        std::vector<MSAccessible*> m_children;
 	};
 }
