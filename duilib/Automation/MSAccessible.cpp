@@ -590,29 +590,29 @@ namespace ui
         if (wcscmp(className, L"Button") == 0) {
             LONG style = static_cast<LONG>(::GetWindowLongPtrW(m_hWnd, GWL_STYLE));
             if (style & BS_CHECKBOX)
-                *pszDefaultAction = ::SysAllocString(L"切换");
+                *pszDefaultAction = ::SysAllocString(L"Switch");
             else if (style & BS_RADIOBUTTON)
-                *pszDefaultAction = ::SysAllocString(L"选择");
+                *pszDefaultAction = ::SysAllocString(L"Select");
             else
-                *pszDefaultAction = ::SysAllocString(L"单击");
+                *pszDefaultAction = ::SysAllocString(L"Click");
             return (*pszDefaultAction) ? S_OK : E_OUTOFMEMORY;
         }
 
         // ComboBox
         if (wcscmp(className, L"ComboBox") == 0) {
-            *pszDefaultAction = ::SysAllocString(L"展开");
+            *pszDefaultAction = ::SysAllocString(L"Expand");
             return (*pszDefaultAction) ? S_OK : E_OUTOFMEMORY;
         }
 
         // ListBox
         if (wcscmp(className, L"ListBox") == 0) {
-            *pszDefaultAction = ::SysAllocString(L"选择");
+            *pszDefaultAction = ::SysAllocString(L"Select");
             return (*pszDefaultAction) ? S_OK : E_OUTOFMEMORY;
         }
 
         // Edit
         if (wcscmp(className, L"Edit") == 0) {
-            *pszDefaultAction = ::SysAllocString(L"编辑");
+            *pszDefaultAction = ::SysAllocString(L"Edit");
             return (*pszDefaultAction) ? S_OK : E_OUTOFMEMORY;
         }
 
@@ -623,7 +623,7 @@ namespace ui
         }
 
         // 其它控件默认返回“激活”
-        *pszDefaultAction = ::SysAllocString(L"激活");
+        *pszDefaultAction = ::SysAllocString(L"Activate");
         return (*pszDefaultAction) ? S_OK : E_OUTOFMEMORY;
     }
     HRESULT STDMETHODCALLTYPE MSAccessible::accSelect(long flagsSelect, VARIANT varChild)

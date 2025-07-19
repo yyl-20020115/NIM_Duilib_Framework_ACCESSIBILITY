@@ -5,6 +5,7 @@ namespace ui
 
 class ShadowBox : public Box
 {
+
 public:
 	virtual void Paint(IRenderContext* pRender, const UiRect& rcPaint) override
 	{

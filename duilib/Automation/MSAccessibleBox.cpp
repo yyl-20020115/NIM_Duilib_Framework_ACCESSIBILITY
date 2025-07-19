@@ -15,9 +15,15 @@ namespace ui
 		Box* box = dynamic_cast<Box*>(this->m_pControl);
 		if (box != nullptr) {
 			for (int i = 0; i < box->GetCount(); i++) {
-				MSAccessible* ms = box->GetItemAt(i)->GetAccessible();
-				ms->TryReloadChildren();
-				this->m_children.push_back(ms);
+				Control* pc = box->GetItemAt(i);
+				if (pc != nullptr) {
+					MSAccessible* ms = pc->GetAccessible();
+					if (ms != nullptr) {
+						ms->AddRef();
+						ms->TryReloadChildren();
+						this->m_children.push_back(ms);
+					}
+				}
 			}
 		}
 	}

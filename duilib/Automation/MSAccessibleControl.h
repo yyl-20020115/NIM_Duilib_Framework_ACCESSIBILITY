@@ -14,6 +14,9 @@ namespace ui
 	public:
 		MSAccessibleControl(Control* pControl);
 		virtual ~MSAccessibleControl();
+
+		HRESULT accLocation(long* pxLeft, long* pyTop, long* pcxWidth, long* pcyHeight, VARIANT varChild) override;
+
 	public:
 		
 		void TryReloadChildren() override;

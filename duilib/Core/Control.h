@@ -599,7 +599,7 @@ public:
 	 */
 	virtual UIAControlProvider* GetUIAProvider();
 
-	MSAccessible* GetAccessible();
+	virtual MSAccessible* GetAccessible() ;
 
 	// 消息处理
 	/**

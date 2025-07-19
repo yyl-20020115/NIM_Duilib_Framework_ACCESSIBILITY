@@ -6,6 +6,13 @@ namespace ui
 	MSAccessibleWindow::MSAccessibleWindow(Window* pWindow)
 		:m_pWindow(pWindow)
 	{
+		if (pWindow != nullptr) {
+			this->m_hWnd = pWindow->GetHWND();
+		}
+		else {
+			this->m_hWnd = nullptr;
+			this->m_name = nullptr;
+		}
 	}
 	MSAccessibleWindow::~MSAccessibleWindow()
 	{

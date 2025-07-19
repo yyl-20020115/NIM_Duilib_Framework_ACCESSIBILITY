@@ -235,11 +235,20 @@ UIAControlProvider* Box::GetUIAProvider()
 MSAccessible* Box::GetAccessible()
 {
 	if (m_pAccessible == NULL) {
-		m_pAccessible = static_cast<MSAccessible*>(new (std::nothrow)MSAccessibleBox(this));
+		m_pAccessible = new (std::nothrow)MSAccessibleBox(this);
+	}
+	return m_pAccessible;
+}
+MSAccessible* ScrollableBox::GetAccessible()
+{
+	if (m_pAccessible == NULL) {
+		m_pAccessible = new (std::nothrow)MSAccessibleScrollableBox(this);
 	}
 	return m_pAccessible;
 }
 #endif
+
+
 void Box::SetWindow(Window* pManager, Box* pParent, bool bInit)
 {
 	for (auto it = m_items.begin(); it != m_items.end(); it++) {
@@ -856,18 +865,6 @@ UIAControlProvider* ScrollableBox::GetUIAProvider()
 #endif
 }
 
-MSAccessible* ScrollableBox::GetAccessible()
-{
-#if defined(ENABLE_ACCESSIBLE)
-	if (m_pAccessible == nullptr)
-	{
-		m_pAccessible = static_cast<MSAccessible*>(new (std::nothrow) MSAccessibleScrollableBox(this));
-	}
-	return m_pAccessible;
-#else
-	return nullptr;
-#endif
-}
 
 void ScrollableBox::SetAttribute(const std::wstring& pstrName, const std::wstring& pstrValue)
 {

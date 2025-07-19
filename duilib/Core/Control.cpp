@@ -807,7 +807,7 @@ namespace ui
 	MSAccessible* Control::GetAccessible()
 	{
 		if (m_pAccessible == NULL) {
-			m_pAccessible = static_cast<MSAccessible*>(new (std::nothrow)MSAccessibleControl(this));
+			m_pAccessible = (new (std::nothrow)MSAccessibleControl(this));
 		}
 		return m_pAccessible;
 	}
