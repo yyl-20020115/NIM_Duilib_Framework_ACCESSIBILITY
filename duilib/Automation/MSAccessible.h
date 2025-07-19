@@ -6,7 +6,8 @@
 
 namespace ui
 {
-	class MSAccessible
+    float GetScreenDisplayScale();
+    class MSAccessible
         : public IAccessible
 		, public IEnumVARIANT
 	{

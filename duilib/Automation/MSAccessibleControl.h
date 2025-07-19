@@ -15,7 +15,9 @@ namespace ui
 		MSAccessibleControl(Control* pControl,MSAccessible* pParent = nullptr);
 		virtual ~MSAccessibleControl();
 
-		HRESULT accLocation(long* pxLeft, long* pyTop, long* pcxWidth, long* pcyHeight, VARIANT varChild) override;
+		HRESULT STDMETHODCALLTYPE accLocation(long* pxLeft, long* pyTop, long* pcxWidth, long* pcyHeight, VARIANT varChild) override;
+
+		HRESULT STDMETHODCALLTYPE accHitTest(long xLeft, long yTop, VARIANT* pvarChild) override;
 
 	public:	
 		void TryReloadChildren() override;

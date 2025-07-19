@@ -869,6 +869,12 @@ namespace ui
 		RECT rcWnd = { 0 };
 		if (!::GetWindowRect(m_hWnd, &rcWnd))
 			return S_FALSE;
+		float ratio = GetScreenDisplayScale();
+
+		rcWnd.left = (int)(rcWnd.left * ratio);
+		rcWnd.right = (int)(rcWnd.right * ratio);
+		rcWnd.top = (int)(rcWnd.top * ratio);
+		rcWnd.bottom = (int)(rcWnd.bottom * ratio);
 
 		// 判断点是否在窗口内
 		if (xLeft < rcWnd.left || xLeft >= rcWnd.right ||
