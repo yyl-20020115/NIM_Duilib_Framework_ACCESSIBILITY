@@ -69,6 +69,13 @@ public:
 	}
 
 	// IItemContainerProvider methods
+	
+	IFACEMETHODIMP UIAControlProvider::FindItemByProperty(IRawElementProviderSimple* pStartAfter, PROPERTYID propertyId, VARIANT value, IRawElementProviderSimple** pFound) {
+		*pFound = nullptr;
+		UIA_CHECK_ELEMENT_RETURN(m_pControl);
+	}
+
+	// IItemContainerProvider methods
 	virtual IFACEMETHODIMP FindItemByProperty(__RPC__in_opt IRawElementProviderSimple* pStartAfter,
 		PROPERTYID propertyId, VARIANT value,
 		__RPC__deref_out_opt IRawElementProviderSimple** pFound) {
@@ -107,6 +114,7 @@ public:
 		*pRetVal = ExpandCollapseState_LeafNode;  
 		UIA_CHECK_ELEMENT_RETURN(m_pControl); 
 	}
+
 
 
 protected:

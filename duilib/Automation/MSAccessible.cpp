@@ -47,6 +47,9 @@ namespace ui
 		, m_name()
 		, m_value()
 	{
+		if (pParent != nullptr) {
+			pParent->AddRef();
+		}
 	}
 
 	void MSAccessible::SetHwnd(HWND hWnd)

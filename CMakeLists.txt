@@ -14,3 +14,6 @@ add_subdirectory(examples/layouts)
 add_subdirectory(examples/move_control)
 add_subdirectory(examples/richlist)
 add_subdirectory(examples/virtualbox)
+add_subdirectory(duilib_uia_proxy)
+add_subdirectory(duilib_uia_caller)
+
