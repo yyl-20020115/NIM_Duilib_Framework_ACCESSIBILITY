@@ -5,7 +5,8 @@
 
 #if defined(ENABLE_UIAUTOMATION)
 
-namespace ui {
+namespace ui_automation
+{
 
 UIAControlProvider::UIAControlProvider(IAccessible* pControl, UIAWindowProvider* pWindow)
 	:m_refCount(1)

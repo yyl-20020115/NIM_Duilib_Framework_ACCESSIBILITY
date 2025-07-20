@@ -5,7 +5,7 @@
 
 #if defined(ENABLE_UIAUTOMATION)
 
-namespace ui
+namespace ui_automation
 {
 
 class UIATreeNodeProvider :public UIAListBoxItemProvider

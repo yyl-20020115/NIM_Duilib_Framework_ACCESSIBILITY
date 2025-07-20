@@ -6,7 +6,7 @@
 
 #if defined(ENABLE_UIAUTOMATION)
 
-namespace ui
+namespace ui_automation
 {
 
 class UIAControlProvider : 

@@ -3,7 +3,7 @@
 
 #if defined(ENABLE_UIAUTOMATION)
 
-namespace ui
+namespace ui_automation
 {
 
 UIABoxProvider::UIABoxProvider(IAccessible* pControl)

@@ -12,8 +12,8 @@
 #define new DEBUG_NEW
 #endif
 
-typedef void (*Ptr_AttachWindowFunc)(HWND hwnd);
-typedef void (*Ptr_DetachWindowFunc)(HWND hwnd);
+typedef BOOL (*Ptr_AttachWindowFunc)(HWND hwnd);
+typedef BOOL(*Ptr_DetachWindowFunc)(HWND hwnd);
 HMODULE hModule = nullptr;
 Ptr_AttachWindowFunc AttachWindow = nullptr;
 Ptr_DetachWindowFunc DetachWindow = nullptr;
@@ -88,7 +88,7 @@ BOOL CDuilibUIAMFCCallerDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	SetWindowText(_T("Duilib UIA MFC Caller"));
+	SetWindowText(_T("Duilib UIA-Proxy Installer"));
 
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
@@ -229,7 +229,15 @@ void CDuilibUIAMFCCallerDlg::OnBnClickedCheckAttach()
 			AfxMessageBox(_T("无法调用AttachWindow"));
 		}
 		else {
-			AttachWindow(hwnd);
+			BOOL done = AttachWindow(hwnd);
+			if (done) {
+				CString strMsg;
+				strMsg.Format(_T("已成功附加到窗口句柄: %08X"), (INT)(UINT_PTR)hwnd);
+				AfxMessageBox(strMsg);
+			}
+			else {
+				AfxMessageBox(_T("附加窗口失败"));
+			}
 		}
 	}
 	else
@@ -238,7 +246,15 @@ void CDuilibUIAMFCCallerDlg::OnBnClickedCheckAttach()
 			AfxMessageBox(_T("无法调用DetachWindow"));
 		}
 		else {
-			DetachWindow(hwnd);
+			BOOL done = DetachWindow(hwnd);
+			if (done) {
+				CString strMsg;
+				strMsg.Format(_T("已成功从窗口句柄: %08X 中分离"), (INT)(UINT_PTR)hwnd);
+				AfxMessageBox(strMsg);
+			}
+			else {
+				AfxMessageBox(_T("分离窗口失败"));
+			}
 		}
 	}
 
@@ -285,7 +301,7 @@ void CDuilibUIAMFCCallerDlg::OnMouseMove(UINT nFlags, CPoint point)
 				rt.left, rt.top, rt.right - rt.left, rt.bottom - rt.top);
 		
 			CString strHwnd;
-			strHwnd.Format(_T("0x%08X"), (UINT_PTR)hWnd);
+			strHwnd.Format(_T("%08X"), (UINT_PTR)hWnd);
 			this->HwndEdit.SetWindowText(strHwnd);
 		
 		}

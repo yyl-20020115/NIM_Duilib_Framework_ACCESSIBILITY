@@ -1,6 +1,4 @@
-#include <windows.h>
-
-#include <Windows.h>
+#include "StdAfx.h"
 #include <strsafe.h>
 #include <tchar.h>
 #include <UIAutomationCore.h>
@@ -23,32 +21,45 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
 static HHOOK hHook = NULL;
 static HWND hwndTarget = NULL;
-__declspec(dllexport) extern "C" void AttachWindow(HWND hwnd)
+static IAccessible* acc = nullptr;
+__declspec(dllexport) extern "C" BOOL AttachWindow(HWND hwnd)
 {
     if (hHook == NULL)
     {
+        HRESULT hr = AccessibleObjectFromWindow(hwndTarget, OBJID_CLIENT, IID_IAccessible, (void**)&acc);
+        if(hr==S_OK)
+        {
+            hHook = SetWindowsHookEx(WH_CALLWNDPROC,
+                [](int nCode, WPARAM wParam, LPARAM lParam) -> LRESULT {
+                    if (nCode >= 0) {
+                        CWPSTRUCT* cwp = (CWPSTRUCT*)lParam;
+                        if (cwp != nullptr
+                            && cwp->hwnd == hwndTarget
+                            && cwp->message == WM_GETOBJECT) {
 
-        hHook = SetWindowsHookEx(WH_CALLWNDPROC, 
-            [](int nCode, WPARAM wParam, LPARAM lParam) -> LRESULT {
-                if (nCode >= 0) {
-                    CWPSTRUCT* cwp = (CWPSTRUCT*)lParam;
-                    if (cwp!=nullptr 
-                        && cwp->hwnd == hwndTarget 
-                        && cwp->message == WM_GETOBJECT) {
+                            if (static_cast<long>(lParam) == static_cast<long>(UiaRootObjectId))
+                            {
+                                IRawElementProviderSimple* pRootProvider =
+                                    new ui_automation::UIAWindowProvider(acc, hwndTarget);
 
-                        if (static_cast<long>(lParam) == static_cast<long>(UiaRootObjectId))
-                        {
-                            IRawElementProviderSimple* pRootProvider = nullptr;
-
-                            return UiaReturnRawElementProvider(hwndTarget, wParam, lParam, pRootProvider);
+                                return UiaReturnRawElementProvider(
+                                    hwndTarget, wParam, lParam, pRootProvider);
+                            }
                         }
                     }
-                }
-            return CallNextHookEx(hHook, nCode, wParam, lParam);
-        }, NULL, GetCurrentThreadId());
+                    return CallNextHookEx(hHook, nCode, wParam, lParam);
+                }, NULL, GetCurrentThreadId());
+        }
+        else
+        {
+            // ´íÎó´¦Àí
+            acc = nullptr;
+            return FALSE;
+		}
         
         if(hHook!=NULL){
             hwndTarget = hwnd;
+            return TRUE;
         }
         else
         {
@@ -58,14 +69,21 @@ __declspec(dllexport) extern "C" void AttachWindow(HWND hwnd)
 		}
 
 	}
+    return FALSE;
 
 }
-__declspec(dllexport) extern "C" void DetachWindow(HWND hwnd)
+__declspec(dllexport) extern "C" BOOL DetachWindow(HWND hwnd)
 {
     if(hHook != NULL && hwndTarget == hwnd)
     {
-        UnhookWindowsHookEx(hHook);
+        BOOL done = UnhookWindowsHookEx(hHook);
         hHook = NULL;
 		hwndTarget = NULL;
+        if (acc) {
+            acc->Release();
+			acc = nullptr;
+        }
+        return done;
 	}
+    return FALSE;
 }

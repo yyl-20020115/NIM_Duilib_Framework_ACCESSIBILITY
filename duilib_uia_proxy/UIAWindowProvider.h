@@ -5,10 +5,11 @@
 
 #if defined(ENABLE_UIAUTOMATION)
 
-namespace ui
+namespace ui_automation
 {
 
-class UIAWindowProvider : public IRawElementProviderSimple,
+class UIAWindowProvider : 
+	public IRawElementProviderSimple,
 	public IRawElementProviderFragment,
 	public IRawElementProviderFragmentRoot,
 	public IWindowProvider,
@@ -17,8 +18,6 @@ class UIAWindowProvider : public IRawElementProviderSimple,
 public:
 	// Constructor/destructor.
 	UIAWindowProvider(IAccessible* pWindow, HWND hWnd);
-
-	void ResetWindow(IAccessible* pWindow = nullptr, HWND hWnd = nullptr);
 
 	// IUnknown methods
 	IFACEMETHODIMP_(ULONG) AddRef();

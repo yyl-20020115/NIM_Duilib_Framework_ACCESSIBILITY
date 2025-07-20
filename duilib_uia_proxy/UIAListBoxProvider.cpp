@@ -2,7 +2,7 @@
 
 #if defined(ENABLE_UIAUTOMATION)
 
-namespace ui
+namespace ui_automation
 {
 
 UIAListBoxProvider::UIAListBoxProvider(IAccessible* pControl)
