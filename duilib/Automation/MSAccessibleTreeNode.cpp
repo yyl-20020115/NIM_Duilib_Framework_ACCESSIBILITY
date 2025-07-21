@@ -3,7 +3,7 @@
 namespace ui
 {
 	MSAccessibleTreeNode::MSAccessibleTreeNode(Control* pControl, MSAccessible* pParent)
-		:MSAccessibleListBoxItem(pControl,pParent)
+		:MSAccessibleListBoxItem(pControl, pParent)
 	{
 	}
 	MSAccessibleTreeNode::~MSAccessibleTreeNode()

@@ -5,8 +5,8 @@
 namespace ui_automation
 {
 	UIAWindowProvider::UIAWindowProvider(IAccessible* pWindow, HWND hWnd) :
-		m_refCount(1), 
-		m_pWnd(pWindow), 
+		m_refCount(1),
+		m_pWnd(pWindow),
 		m_hWnd(hWnd)
 	{
 	}
@@ -155,7 +155,8 @@ namespace ui_automation
 		UIA_CHECK_ELEMENT(m_pWnd);
 
 		IRawElementProviderFragment* pFrag = nullptr;
-		if (direction == NavigateDirection_FirstChild && nullptr != m_pWnd && nullptr != m_pWnd->GetRoot()) {
+		if (direction == NavigateDirection_FirstChild
+			&& nullptr != m_pWnd) {
 
 			pFrag = static_cast<IRawElementProviderFragment*>(
 				m_pWnd->GetRoot()->GetUIAProvider()
@@ -301,15 +302,14 @@ namespace ui_automation
 
 		HRESULT hr = m_pWnd->get_accFocus(&varChild);
 
-		if (S_OK == hr)
+		if (S_OK == hr && varChild.vt == VT_I4 && varChild.lVal == CHILDID_SELF)
 		{
-			*pRetVal = static_cast<IRawElementProviderFragment*>(
-				pControl->GetUIAProvider()
-				);
+			*pRetVal = this;
 			(*pRetVal)->AddRef();
+			return S_OK;
 		}
 
-		return S_OK;
+		return E_FAIL;
 	}
 
 

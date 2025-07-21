@@ -4,8 +4,8 @@
 namespace ui
 {
 	MSAccessibleWindow::MSAccessibleWindow(Window* pWindow, MSAccessible* pParent)
-		:MSAccessible(pParent)
-		,m_pWindow(pWindow)
+		: MSAccessible(pParent)
+		, m_pWindow(pWindow)
 	{
 		if (pWindow != nullptr) {
 			this->m_hWnd = pWindow->GetHWND();
@@ -24,7 +24,7 @@ namespace ui
 		if (this->m_pWindow != nullptr) {
 			auto pc = this->m_pWindow->GetRoot();
 			if (pc != nullptr) {
-				auto ms =pc->GetAccessible();
+				auto ms = pc->GetAccessible();
 				if (ms != nullptr) {
 					ms->AddRef();
 					ms->TryReloadChildren();

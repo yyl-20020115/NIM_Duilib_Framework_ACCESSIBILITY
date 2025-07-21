@@ -4,10 +4,10 @@ namespace ui
 {
 	MSAccessibleControl::MSAccessibleControl(Control* pControl, MSAccessible* pParent)
 		:MSAccessible(pParent)
-		,m_pControl(pControl)
+		, m_pControl(pControl)
 	{
 		if (pControl != nullptr) {
-			this->m_hWnd = pParent!=nullptr? pParent->GetWindowHandle() 
+			this->m_hWnd = pParent != nullptr ? pParent->GetWindowHandle()
 				: pControl->GetWindow()->GetHWND();
 			this->m_name = ::SysAllocString(pControl->GetType().c_str());
 
@@ -16,7 +16,7 @@ namespace ui
 	MSAccessibleControl::~MSAccessibleControl()
 	{
 	}
-	
+
 	HRESULT STDMETHODCALLTYPE MSAccessibleControl::accLocation(long* pxLeft, long* pyTop, long* pcxWidth, long* pcyHeight, VARIANT varChild)
 	{
 		if (!pxLeft || !pyTop || !pcxWidth || !pcyHeight)
@@ -40,8 +40,8 @@ namespace ui
 
 		*pxLeft = (int)((rcWnd.left + r.left) * ratio);
 		*pyTop = (int)((rcWnd.right + r.top) * ratio);
-		*pcxWidth = (int)((r.right-r.left) * ratio);
-		*pcyHeight = (int)((r.bottom-r.top) * ratio);
+		*pcxWidth = (int)((r.right - r.left) * ratio);
+		*pcyHeight = (int)((r.bottom - r.top) * ratio);
 
 		return S_OK;
 	}
@@ -63,8 +63,8 @@ namespace ui
 		float ratio = GetScreenDisplayScale();
 		UiRect r = this->m_pControl->GetPos();
 
-		rcWnd.left = (int)((rcWnd.left +r.left)* ratio);
-		rcWnd.top = (int)((rcWnd.right +r.top) * ratio);
+		rcWnd.left = (int)((rcWnd.left + r.left) * ratio);
+		rcWnd.top = (int)((rcWnd.right + r.top) * ratio);
 		rcWnd.right = (int)((rcWnd.left + r.right) * ratio);
 		rcWnd.bottom = (int)((rcWnd.top + r.bottom) * ratio);
 

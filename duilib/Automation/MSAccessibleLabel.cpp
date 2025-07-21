@@ -3,7 +3,7 @@
 namespace ui
 {
 	MSAccessibleLabel::MSAccessibleLabel(Control* pControl, MSAccessible* pParent)
-		:MSAccessibleControl(pControl,pParent)
+		:MSAccessibleControl(pControl, pParent)
 	{
 	}
 	MSAccessibleLabel::~MSAccessibleLabel()

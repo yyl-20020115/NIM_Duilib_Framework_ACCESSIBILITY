@@ -3,7 +3,7 @@
 namespace ui
 {
 	MSAccessibleCheckBox::MSAccessibleCheckBox(Control* pControl, MSAccessible* pParent)
-		:MSAccessibleButton(pControl,pParent)
+		:MSAccessibleButton(pControl, pParent)
 	{
 	}
 	MSAccessibleCheckBox::~MSAccessibleCheckBox()

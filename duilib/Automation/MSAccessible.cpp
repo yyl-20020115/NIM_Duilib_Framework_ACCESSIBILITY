@@ -6,7 +6,7 @@ namespace ui
 {
 	typedef UINT(*Ptr_GetDpiForWindow)(HWND hwnd);
 
-	UINT GetDpiForWindowWrapper(
+	static UINT GetDpiForWindowWrapper(
 		HWND hwnd
 	) {
 		HMODULE h = LoadLibraryEx(_T("user32.dll"), nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
@@ -201,7 +201,7 @@ namespace ui
 		if (!ppdispChild) return E_INVALIDARG;
 		*ppdispChild = nullptr;
 
-		if(this->m_children.size() == 0) {
+		if (this->m_children.size() == 0) {
 			this->TryReloadChildren();
 		}
 
@@ -238,7 +238,7 @@ namespace ui
 		if (!m_hWnd)
 			return S_FALSE;
 		if (this->m_name == nullptr) {
-			
+
 			// 获取窗口标题
 			WCHAR szText[1024] = { 0 };
 			int len = ::GetClassName(m_hWnd, szText, _countof(szText));

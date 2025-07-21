@@ -3,7 +3,7 @@
 namespace ui
 {
 	MSAccessibleListBoxItem::MSAccessibleListBoxItem(Control* pControl, MSAccessible* pParent)
-		:MSAccessibleCheckBox(pControl,pParent)
+		:MSAccessibleCheckBox(pControl, pParent)
 	{
 	}
 	MSAccessibleListBoxItem::~MSAccessibleListBoxItem()
